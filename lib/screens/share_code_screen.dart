@@ -18,22 +18,13 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
         ),
         backgroundColor: Colors.yellow,
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+          padding: EdgeInsets.all(16.0),
           child: Column(children: [
-            const Text(
+            Text(
               'Share Code',
               style: TextStyle(fontSize: 24.0),
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ShareCodeScreen();
-                }));
-              },
-              child: const Text('Go to Share Code Screen'),
-            )
           ])),
     );
   }
