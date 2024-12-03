@@ -9,6 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  android_id:
+  device_info_plus:
+  provider:
+  shared_preferences:
+  path_provider:
+  http:
   
 
 dev_dependencies:
@@ -17,6 +23,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_launcher_icons: 
   flutter_native_splash: 
+  
 
 flutter:
   uses-material-design: true
