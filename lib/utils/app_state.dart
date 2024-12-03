@@ -13,8 +13,12 @@ class AppState extends ChangeNotifier {
     return _deviceId ?? "Unknown Device ID";
   }
 
-  void setSessionId(sessionId) {
+  setSessionId(String sessionId) {
     _sessionId = sessionId;
     notifyListeners();
+  }
+
+  String get sessionId {
+    return _sessionId ?? "Unknown Session ID";
   }
 }

@@ -1,61 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'enter_code_screen.dart';
 import 'movie_selection_screen.dart';
+import 'package:movie_night/utils/http_helper.dart';
+import 'package:provider/provider.dart';
+import 'package:movie_night/utils/app_state.dart';
 
 class ShareCodeScreen extends StatefulWidget {
-  final String deviceId;
-  const ShareCodeScreen({super.key, required this.deviceId});
+  const ShareCodeScreen({super.key});
 
   @override
   State<ShareCodeScreen> createState() => _ShareCodeScreenState();
 }
 
-/**
- * Share Code Screen Requirements
-As loading this screen, make an HTTP call to the MovieNight API /start-session endpoint.
-Save the session id in a place that can be accessed from other screens.
-Have a button that will navigate to the Movie Selection Screen.
-#
- */
-
 class _ShareCodeScreenState extends State<ShareCodeScreen> {
-  late String _deviceId;
   String _code = "Fetching...";
 
   @override
   void initState() {
     super.initState();
-    _deviceId = widget.deviceId;
     _startSession();
   }
 
   Future<void> _startSession() async {
-    try {
-      final response = await http.get(
-        Uri.parse(
-            'https://movie-night-api.onrender.com/start-session?device_id=$_deviceId'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print("data == $data");
-        setState(() {
-          _code = data['data']['code'];
-        });
-        // Save session ID in a place accessible from other screens
-        // For example, using a shared preference or a state management solution
-      } else {
-        setState(() {
-          _code = 'Failed to start session';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _code = 'Error: $e';
-      });
-    }
+    String? deviceId = Provider.of<AppState>(context, listen: false).deviceId;
+    final response = await HttpHelper.startSession(deviceId);
+    _code = response['data']['code'];
   }
 
   @override

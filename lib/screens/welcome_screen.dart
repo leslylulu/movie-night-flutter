@@ -70,9 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ShareCodeScreen(
-                      deviceId: _deviceId,
-                    );
+                    return const ShareCodeScreen();
                   }));
                 },
                 child: const Padding(

@@ -28,11 +28,12 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
     final deviceId = Provider.of<AppState>(context, listen: false).deviceId;
     final response = await http.get(
       Uri.parse(
-          "https://movie-night-api.onrender.com/join-session?code=$code&deviceId=$deviceId"),
+          "https://movie-night-api.onrender.com/join-session?code=$code&device_Id=$deviceId"),
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final sessionId = data["data"]["sessionId"];
+      print("join session data == $data");
+      final sessionId = data["data"]["session_id"];
       Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
