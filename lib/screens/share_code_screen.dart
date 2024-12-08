@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'movie_selection_screen.dart';
 import 'package:movie_night/utils/http_helper.dart';
@@ -23,7 +24,14 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
   Future<void> _startSession() async {
     String? deviceId = Provider.of<AppState>(context, listen: false).deviceId;
     final response = await HttpHelper.startSession(deviceId);
-    _code = response['data']['code'];
+    if (mounted) {
+      setState(() {
+        _code = response['data']['code'];
+      });
+    }
+    if (kDebugMode) {
+      print("Code: $_code");
+    }
   }
 
   @override

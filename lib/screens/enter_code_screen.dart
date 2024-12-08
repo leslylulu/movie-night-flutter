@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
 import '../utils/app_state.dart';
+import '../utils/http_helper.dart';
 import 'movie_selection_screen.dart';
 
 class EnterCodeScreen extends StatefulWidget {
@@ -26,16 +27,14 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
     }
 
     final deviceId = Provider.of<AppState>(context, listen: false).deviceId;
-    final response = await http.get(
-      Uri.parse(
-          "https://movie-night-api.onrender.com/join-session?code=$code&device_Id=$deviceId"),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print("join session data == $data");
-      final sessionId = data["data"]["session_id"];
-      Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
+    final response = await HttpHelper.joinSession(code, deviceId);
 
+    if (response.statusCode == 200) {
+      final sessionId = response["data"]["session_id"];
+      Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
+      if (kDebugMode) {
+        print("join session data == $response");
+      }
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return const MovieSelectionScreen();
       }));
