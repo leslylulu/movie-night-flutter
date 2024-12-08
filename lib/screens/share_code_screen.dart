@@ -27,6 +27,8 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
     if (mounted) {
       setState(() {
         _code = response['data']['code'];
+        Provider.of<AppState>(context, listen: false)
+            .setSessionId(response['data']['session_id']);
       });
     }
     if (kDebugMode) {
@@ -54,7 +56,7 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
                 Text(
                   _code,
                   style: const TextStyle(
-                      fontSize: 32.0, fontWeight: FontWeight.bold),
+                      fontSize: 56.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 32.0),
                 const Text("Share this code with your friends"),

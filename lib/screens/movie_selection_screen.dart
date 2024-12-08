@@ -30,38 +30,74 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
     final response = await http.get(Uri.parse(
         "https://api.themoviedb.org/3/movie/popular?api_key=$_apiKey&page=$_currentPage"));
     final data = jsonDecode(response.body);
+    if (!mounted) return;
     setState(() {
       _movies.addAll(List<Map<String, dynamic>>.from(data['results']));
       _currentPage++;
+      final sessionId2 =
+          Provider.of<AppState>(context, listen: false).sessionId;
       if (kDebugMode) {
-        print("Movies: $_movies");
+        print("sessionId: $sessionId2");
       }
     });
   }
 
   Future<void> _voteMovie(bool vote) async {
+    if (kDebugMode) {
+      print("vote: $vote");
+    }
     final sessionId = Provider.of<AppState>(context, listen: false).sessionId;
     final movieId = _movies[_currentIndex]['id'];
     final response = await HttpHelper.voteMovie(sessionId, movieId, vote);
     final result = response['data'];
-
-    if (result['match']) {
-      _showMatchDialog(result['movie']);
+    if (kDebugMode) {
+      print("response: $response");
+    }
+    if (response.containsKey('code')) {
+      _showErrorDialog(response['message']);
     } else {
-      _loadNextMovie();
+      if (result['match']) {
+        _showMatchDialog(result['movie_id']);
+      } else {
+        _loadNextMovie();
+      }
     }
   }
 
-  void _showMatchDialog(Map<String, dynamic> movie) {
+  void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Match Found!'),
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMatchDialog(String movieId) {
+    final movie = _movies.firstWhere(
+      (movie) => movie['id'].toString() == movieId,
+      orElse: () => <String, dynamic>{},
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('${movie['title']} Winners 👑'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('You matched on: ${movie['title']}'),
               movie['poster_path'] != null
                   ? Image.network(
                       'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
@@ -70,15 +106,20 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                       fit: BoxFit.cover,
                     )
                   : Image.asset(
-                      'assets/images/default_poster.png',
+                      'assets/images/default_poster.jpg',
                       width: 300,
                       height: 300,
                       fit: BoxFit.cover,
                     ),
+              Text(' ${movie['title']} is matching the movie you voted!'),
             ],
           ),
           actions: [
             TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.yellow,
+              ),
               onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
@@ -97,6 +138,9 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
   void _loadNextMovie() {
     setState(() {
       _currentIndex++;
+      if (kDebugMode) {
+        print("movieId: ${_movies[_currentIndex]['id']}");
+      }
       if (_currentIndex >= _movies.length) {
         _fetchMovies();
       }
@@ -112,6 +156,7 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
     }
 
     final movie = _movies[_currentIndex];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -151,6 +196,39 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            Icon(
+                              Icons.thumb_down,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.thumb_up,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
@@ -162,7 +240,7 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                               fit: BoxFit.cover,
                             )
                           : Image.asset(
-                              'assets/images/default_poster.png',
+                              'assets/images/default_poster.jpg',
                               width: 300,
                               height: 300,
                               fit: BoxFit.cover,
@@ -174,14 +252,27 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                       style: const TextStyle(
                           fontSize: 24, fontWeight: FontWeight.bold),
                     ),
+                    const SizedBox(height: 16),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "${movie['release_date']}",
-                          textAlign: TextAlign.left,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${movie['release_date']}",
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              "${movie['original_language']}",
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              "Vote Count: ${movie['vote_count']}",
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 32),
                         Container(
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
@@ -194,7 +285,7 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

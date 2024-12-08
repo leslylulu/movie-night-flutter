@@ -13,7 +13,7 @@ class HttpHelper {
 
   static joinSession(String code, String deviceId) async {
     var response = await http.get(Uri.parse(
-        "$movieNightBaseUrl/join-session?code=$code&device_Id=$deviceId"));
+        "$movieNightBaseUrl/join-session?code=$code&device_id=$deviceId"));
     return jsonDecode(response.body);
   }
 
