@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import '../utils/app_state.dart';
 import '../utils/http_helper.dart';
 import 'movie_selection_screen.dart';
@@ -28,8 +29,17 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
 
     final deviceId = Provider.of<AppState>(context, listen: false).deviceId;
     final response = await HttpHelper.joinSession(code, deviceId);
-
-    if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("join session response == $response");
+    }
+    // error handling
+    if (response.containsKey("code")) {
+      setState(() {
+        _errorMessage = response['message'];
+        _showErrorDialog(response["message"]);
+      });
+      return;
+    } else {
       final sessionId = response["data"]["session_id"];
       Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
       if (kDebugMode) {
@@ -38,12 +48,6 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return const MovieSelectionScreen();
       }));
-    } else {
-      final data = jsonDecode(response.body);
-      setState(() {
-        _errorMessage = data['data']['message'];
-      });
-      _showErrorDialog(_errorMessage!);
     }
   }
 
@@ -52,12 +56,29 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
+          title: const Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Error'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/error.png',
+              ),
+              const SizedBox(height: 16),
+              Text(message),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                _codeController.clear();
               },
               child: const Text('OK'),
             ),
@@ -85,10 +106,14 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
             children: [
               TextField(
                 controller: _codeController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(4),
+                ],
                 style: const TextStyle(fontSize: 24.0),
                 decoration: InputDecoration(
-                  labelText: "Enter Code from your friend",
-                  hintText: "4 digit code",
+                  labelText: "Enter 4-digit code",
                   errorText: _errorMessage,
                 ),
               ),
