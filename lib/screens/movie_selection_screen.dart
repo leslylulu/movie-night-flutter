@@ -62,8 +62,19 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('You matched on: ${movie['title']}'),
-              Image.network(
-                  'https://image.tmdb.org/t/p/w500${movie['poster_path']}'),
+              movie['poster_path'] != null
+                  ? Image.network(
+                      'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      'assets/images/default_poster.png',
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.cover,
+                    ),
             ],
           ),
           actions: [
@@ -143,12 +154,19 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
                     const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        width: 300,
-                        height: 300,
-                        'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
-                        fit: BoxFit.cover,
-                      ),
+                      child: movie['poster_path'] != null
+                          ? Image.network(
+                              'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
+                              width: 300,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'assets/images/default_poster.png',
+                              width: 300,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     const SizedBox(height: 16),
                     Text(

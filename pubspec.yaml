@@ -30,6 +30,7 @@ flutter:
   assets:
     - assets/images/app_icon.png
     - assets/images/splash_logo.png
+    - assets/images/default_poster.jpg
   fonts:
     - family: Poppins
       fonts:

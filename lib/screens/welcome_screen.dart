@@ -15,8 +15,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String _deviceId = "Fetching...";
-
   @override
   void initState() {
     super.initState();
@@ -42,9 +40,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
 
     if (mounted) {
-      setState(() {
-        _deviceId = deviceUUID;
-      });
       Provider.of<AppState>(context, listen: false).setDeviceId(deviceUUID);
     }
   }
