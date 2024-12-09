@@ -34,9 +34,9 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
     setState(() {
       _movies.addAll(List<Map<String, dynamic>>.from(data['results']));
       _currentPage++;
-      final sessionId2 =
-          Provider.of<AppState>(context, listen: false).sessionId;
       if (kDebugMode) {
+        final sessionId2 =
+            Provider.of<AppState>(context, listen: false).sessionId;
         print("sessionId: $sessionId2");
       }
     });

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -41,13 +40,14 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
       return;
     } else {
       final sessionId = response["data"]["session_id"];
+      if (!mounted) return;
       Provider.of<AppState>(context, listen: false).setSessionId(sessionId);
-      if (kDebugMode) {
-        print("join session data == $response");
+
+      if (mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const MovieSelectionScreen();
+        }));
       }
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return const MovieSelectionScreen();
-      }));
     }
   }
 
