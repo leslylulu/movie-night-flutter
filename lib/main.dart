@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:movie_night/utils/app_state.dart';
 import 'screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(ChangeNotifierProvider(
     create: (context) => AppState(),
     child: const MainApp(),

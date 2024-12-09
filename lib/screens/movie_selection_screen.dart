@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
   final List<Map<String, dynamic>> _movies = [];
   int _currentIndex = 0;
   int _currentPage = 1;
-  final String _apiKey = "679f6362eb5ed713e61291e91ae499cc";
 
   @override
   void initState() {
@@ -27,12 +27,21 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
   }
 
   Future<void> _fetchMovies() async {
+    final apiKey = dotenv.env['TMDB_API_KEY'];
+    if (kDebugMode) {
+      print("apiKey: $apiKey");
+    }
     final response = await http.get(Uri.parse(
-        "https://api.themoviedb.org/3/movie/popular?api_key=$_apiKey&page=$_currentPage"));
+        "https://api.themoviedb.org/3/movie/popular?api_key=$apiKey&page=$_currentPage"));
     final data = jsonDecode(response.body);
+    if (kDebugMode) {
+      print("data: $data");
+    }
     if (!mounted) return;
     setState(() {
-      _movies.addAll(List<Map<String, dynamic>>.from(data['results']));
+      _movies.addAll((data['results'] as List)
+          .map((movie) => movie as Map<String, dynamic>)
+          .toList());
       _currentPage++;
       if (kDebugMode) {
         final sessionId2 =
