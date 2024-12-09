@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:provider/provider.dart';
 import '../utils/app_state.dart';
 import '../utils/http_helper.dart';
@@ -27,16 +24,7 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
   }
 
   Future<void> _fetchMovies() async {
-    final apiKey = dotenv.env['TMDB_API_KEY'];
-    if (kDebugMode) {
-      print("apiKey: $apiKey");
-    }
-    final response = await http.get(Uri.parse(
-        "https://api.themoviedb.org/3/movie/popular?api_key=$apiKey&page=$_currentPage"));
-    final data = jsonDecode(response.body);
-    if (kDebugMode) {
-      print("data: $data");
-    }
+    final data = await HttpHelper.fetchMovies(_currentPage);
     if (!mounted) return;
     setState(() {
       _movies.addAll((data['results'] as List)
@@ -59,9 +47,6 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
     final movieId = _movies[_currentIndex]['id'];
     final response = await HttpHelper.voteMovie(sessionId, movieId, vote);
     final result = response['data'];
-    if (kDebugMode) {
-      print("response: $response");
-    }
     if (response.containsKey('code')) {
       _showErrorDialog(response['message']);
     } else {
