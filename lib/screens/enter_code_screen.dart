@@ -90,43 +90,52 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Enter Code',
-          style: TextStyle(color: Colors.black, fontFamily: "Poppins"),
+          style: textTheme.titleLarge,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: colorScheme.secondary,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _codeController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                ],
-                style: const TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
-                  labelText: "Enter 4-digit code",
-                  errorText: _errorMessage,
+      body: Container(
+        color: colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  controller: _codeController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(4),
+                  ],
+                  style: textTheme.displayMedium,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: "Enter 4-digit code",
+                    errorText: _errorMessage,
+                    counterStyle: textTheme.displayMedium,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 32.0),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.yellow,
+                const SizedBox(height: 32.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: colorScheme.onSecondary,
+                    backgroundColor: colorScheme.secondary,
+                  ),
+                  onPressed: _submitCode,
+                  child: const Text('Submit'),
                 ),
-                onPressed: _submitCode,
-                child: const Text('Submit'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

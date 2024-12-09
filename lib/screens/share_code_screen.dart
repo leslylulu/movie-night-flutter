@@ -38,16 +38,20 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Share Code',
-          style: TextStyle(color: Colors.black, fontFamily: "Poppins"),
+          style: textTheme.headlineMedium,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: colorScheme.secondary,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 253, 255, 242),
+        color: colorScheme.surface,
         child: Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,16 +59,15 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
               children: [
                 Text(
                   _code,
-                  style: const TextStyle(
-                      fontSize: 56.0, fontWeight: FontWeight.bold),
+                  style: textTheme.displayLarge,
                 ),
                 const SizedBox(height: 32.0),
                 const Text("Share this code with your friends"),
                 const SizedBox(height: 120.0),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.yellow,
+                      foregroundColor: colorScheme.onSecondary,
+                      backgroundColor: colorScheme.secondary,
                     ),
                     onPressed: () {
                       Navigator.push(context,
@@ -72,11 +75,11 @@ class _ShareCodeScreenState extends State<ShareCodeScreen> {
                         return const MovieSelectionScreen();
                       }));
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.all(16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Text(
                         "Begin",
-                        style: TextStyle(fontSize: 18),
+                        style: textTheme.headlineSmall,
                       ),
                     ))
               ]),

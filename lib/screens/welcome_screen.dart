@@ -46,77 +46,70 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Welcome to Flutter',
-          style: TextStyle(color: Colors.black, fontFamily: "Poppins"),
+          style: textTheme.headlineMedium,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: colorScheme.secondary,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 253, 255, 242),
+        color: colorScheme.surface,
         child: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.yellow,
+                  foregroundColor: colorScheme.onSecondary,
+                  backgroundColor: colorScheme.secondary,
                 ),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return const ShareCodeScreen();
                   }));
                 },
-                child: const Padding(
-                    padding: EdgeInsets.all(16.0),
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.share),
-                        SizedBox(width: 8.0),
+                        const Icon(Icons.share),
+                        const SizedBox(width: 8.0),
                         Text(
                           'Share Code',
-                          style: TextStyle(fontSize: 18),
+                          style: textTheme.headlineSmall,
                         ),
                       ],
                     ))),
             const SizedBox(height: 64.0),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.yellow,
+                foregroundColor: colorScheme.onSecondary,
+                backgroundColor: colorScheme.secondary,
               ),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return const EnterCodeScreen();
                 }));
               },
-              child: const Padding(
-                  padding: EdgeInsets.all(16.0),
+              child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.code),
-                      SizedBox(width: 8.0),
+                      const Icon(Icons.code),
+                      const SizedBox(width: 8.0),
                       Text(
                         'Enter Code',
-                        style: TextStyle(fontSize: 18),
+                        style: textTheme.headlineSmall,
                       ),
                     ],
                   )),
             ),
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     // Example usage of FileHelper
-            //     const deviceId = 'your_device_id';
-            //     await fileHelper.saveDeviceId('device_info.json', deviceId);
-            //     final savedDeviceId =
-            //         await fileHelper.getDeviceId('device_info.json');
-            //     print(savedDeviceId); // Output: your_device_id
-            //   },
-            //   child: const Text('Save and Get Device ID'),
-            // ),
           ]),
         ),
       ),

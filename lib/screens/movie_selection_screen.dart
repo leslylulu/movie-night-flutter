@@ -149,6 +149,10 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     if (_movies.isEmpty) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -159,134 +163,136 @@ class _MovieSelectionScreenState extends State<MovieSelectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Movie Choices',
-          style: TextStyle(color: Colors.black, fontFamily: "Poppins"),
+          style: textTheme.headlineMedium,
         ),
-        backgroundColor: Colors.yellow,
+        backgroundColor: colorScheme.secondary,
       ),
-      body: Dismissible(
-        key: ValueKey(movie["id"]),
-        direction: DismissDirection.horizontal,
-        onDismissed: (direction) => {
-          _voteMovie(direction == DismissDirection.endToStart),
-        },
-        background: Container(
-          color: Colors.yellow,
-          alignment: Alignment.center,
-          child: const Icon(Icons.thumb_down, size: 50),
-        ),
-        secondaryBackground: Container(
-          color: Colors.yellow,
-          alignment: Alignment.center,
-          child: const Icon(Icons.thumb_up, size: 50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Card(
-              color: Colors.yellow,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            Icon(
-                              Icons.thumb_down,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.thumb_up,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: movie['poster_path'] != null
-                          ? Image.network(
-                              'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              'assets/images/default_poster.jpg',
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      movie['title'],
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${movie['release_date']}",
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              "${movie['original_language']}",
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              "Vote Count: ${movie['vote_count']}",
-                              textAlign: TextAlign.left,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow[100],
-                            shape: BoxShape.circle,
+      body: Container(
+        color: colorScheme.surface,
+        child: Dismissible(
+          key: ValueKey(movie["id"]),
+          direction: DismissDirection.horizontal,
+          onDismissed: (direction) => {
+            _voteMovie(direction == DismissDirection.endToStart),
+          },
+          background: Container(
+            color: colorScheme.secondary,
+            alignment: Alignment.center,
+            child: const Icon(Icons.thumb_down, size: 50),
+          ),
+          secondaryBackground: Container(
+            color: colorScheme.secondary,
+            alignment: Alignment.center,
+            child: const Icon(Icons.thumb_up, size: 50),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: Card(
+                color: colorScheme.secondary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_back,
+                                color: colorScheme.onSecondary,
+                                size: 24,
+                              ),
+                              Icon(
+                                Icons.thumb_down,
+                                color: colorScheme.onSecondary,
+                                size: 20,
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            "${movie['vote_average']}",
-                            textAlign: TextAlign.center,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.thumb_up,
+                                color: colorScheme.onSecondary,
+                                size: 20,
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: colorScheme.onSecondary,
+                                size: 24,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: movie['poster_path'] != null
+                            ? Image.network(
+                                'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
+                                width: 300,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/default_poster.jpg',
+                                width: 300,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        movie['title'],
+                        style: textTheme.displaySmall,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${movie['release_date']}",
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "${movie['original_language']}",
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "Vote Count: ${movie['vote_count']}",
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: colorScheme.surface,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              "${movie['vote_average']}",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

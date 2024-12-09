@@ -18,8 +18,33 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(
             fontFamily: "Poppins",
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-            textTheme: Theme.of(context).textTheme.copyWith()),
+            colorScheme: const ColorScheme(
+                primary: Colors.purple,
+                secondary: Colors.yellow,
+                surface: Color.fromARGB(255, 253, 255, 242),
+                error: Colors.red,
+                onPrimary: Colors.white,
+                onSecondary: Colors.black,
+                onSurface: Colors.black,
+                onError: Colors.white,
+                brightness: Brightness.light),
+            textTheme: const TextTheme(
+              displayLarge:
+                  TextStyle(fontSize: 56.0, fontWeight: FontWeight.bold),
+              displayMedium:
+                  TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+              displaySmall:
+                  TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              headlineMedium:
+                  TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              headlineSmall:
+                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              titleLarge:
+                  TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              bodyLarge: TextStyle(fontSize: 14.0),
+              bodyMedium: TextStyle(fontSize: 12.0),
+              bodySmall: TextStyle(fontSize: 10.0),
+            )),
         home: const WelcomeScreen());
   }
 }
