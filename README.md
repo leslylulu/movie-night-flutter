@@ -2,6 +2,8 @@
 
 Movie Night is a Flutter application that helps friends decide on movies to watch together. Users can create or join sessions, vote on movies, and find common interests in films.
 
+<iframe src="https://player.vimeo.com/video/1063321923?h=a6dc3cbd80&amp;title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" width="2048" height="1152" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" title="movie-night"></iframe>
+
 ## Features
 
 - **Session Management**: Create or join movie selection sessions using unique codes
